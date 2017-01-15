@@ -92,6 +92,11 @@ void enc_base64(istream &infile)
 		// We've already finished reading last time. The
 		// input is just of size 3*n.
 		if (padding == 3) {
+			// If we end at the middle of a line, need to
+			// print one more newline
+			if (cnt) {
+				printf("\n");
+			}
 			break;
 		}
 		encode_3_bytes(in, padding);
@@ -150,7 +155,11 @@ void dec_base64(istream &infile)
 		int i = 0;
 		for (; i < 4 && infile >> in[i]; ++i) {}
 		if (i < 4) {
-			break;
+			if (i == 0) {
+				break;
+			}
+			fprintf(stderr, "INVALID INPUT!\n");
+			exit(1);
 		}
 		cout << decode_4_bytes(in);
 	}
